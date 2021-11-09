@@ -8,8 +8,10 @@ use ieee.std_logic_1164.all;
 
 entity testLogic is
 	port(
+	   Clock : in std_logic;
 		n_RST	: in std_logic;
-		roll   :	in integer;
+		roll1 : in integer;
+		roll2 : in integer;
 		WinLoseNA: out std_logic
 	);
 end entity counter;
@@ -19,15 +21,18 @@ architecture rtl of counter is
 	variable curr_state : state_type := firstRoll;
 	variable nxt_state : state_type := firstRoll;
 	signal point : integer;
+	signal roll : integer;
 begin
-	process(roll,n_RST)
+	roll<= roll1 + roll2;
+	process(roll,n_RST,clk)
 	begin
 		if(n_RST = '0') then
-			roll <= 0;
+			roll1 <= 0;
+			roll2 <= 0;
 			WinLoseNA <= '0'; --nothing
 			curr_state := firstRoll;
 			nxt_state := firstRoll;
-		else
+		elsif(Clock'event and Clock ='1') then
 			case (state) is 
 				when firstRoll =>
 					if(roll = 7 or roll = 11) then 
