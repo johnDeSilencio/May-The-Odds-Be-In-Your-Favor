@@ -24,7 +24,11 @@ architecture rtl of testLogic is
 	signal roll : integer;
     signal curr_win_lose_na, nxt_win_lose_na : integer;
 begin
-	roll<= roll1 + roll2;
+    adder : process(roll1, roll2)
+    begin
+        roll <= roll1 + roll2;
+    end process adder;
+    
 	next_state_logic : process(curr_state, roll)
 	begin
         -- defaults to preserve state
