@@ -13,7 +13,8 @@ architecture beh of roll_dice_tb is
                 RB         : in std_logic;
                 n_RST      : in std_logic;
                 DIE_1      : out integer;
-                DIE_2      : out integer
+                DIE_2      : out integer;
+                NEW_ROLL   : out std_logic
             );
     end component roll_dice;
     
@@ -30,6 +31,7 @@ architecture beh of roll_dice_tb is
     signal rb       : std_logic;
     signal die_1    : integer;
     signal die_2    : integer;
+    signal new_roll : std_logic;
     
     begin -- beh
     
@@ -40,7 +42,8 @@ architecture beh of roll_dice_tb is
             n_RST => n_rst,
             RB => rb,
             DIE_1 => die_1,
-            DIE_2 => die_2
+            DIE_2 => die_2,
+            NEW_ROLL => new_roll
         );
     
     
@@ -146,6 +149,7 @@ architecture beh of roll_dice_tb is
             wait_ck;
             
             wait_tb_ck;
+            check_exp_val(new_roll, '0');
             wait_ck;
             
             wait_tb_ck;
@@ -158,9 +162,11 @@ architecture beh of roll_dice_tb is
             wait_ck;
             
             wait_tb_ck;
+            check_exp_val(new_roll, '0');
             wait_ck;
             
             wait_tb_ck;
+            check_exp_val(new_roll, '1');
             check_exp_val(die_1, 1);
             check_exp_val(die_2, 3); -- hard coded based on chosen wait length            
             wait_ck(4);
@@ -171,6 +177,7 @@ architecture beh of roll_dice_tb is
             wait_ck;
             
             wait_tb_ck;
+            check_exp_val(new_roll, '0');
             wait_ck;
             
             wait_tb_ck;
@@ -183,6 +190,7 @@ architecture beh of roll_dice_tb is
             wait_ck;
             
             wait_tb_ck;
+            check_exp_val(new_roll, '0');
             wait_ck;
             
             wait_tb_ck;
