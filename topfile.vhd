@@ -18,8 +18,9 @@ architecture struct of topfile is
 		n_RST	: in std_logic;
 		roll1 : in integer;
 		roll2 : in integer;
+		newRoll :in std_logic;
 		WinLoseNA: out integer
-		);
+	);
 	end component;
 	
 	component roll_dice
@@ -35,6 +36,7 @@ architecture struct of topfile is
 	signal DIE_1 :	integer;
 	signal DIE_2 :	integer;
 	signal output : integer;
+	signal newRoll : std_logic;
 begin
 
 	roll1: roll_dice port map(
@@ -50,6 +52,7 @@ begin
 							KEY(0),
 							DIE_1,
 							DIE_2,
+							newRoll,
 							output);
 							
 	LEDG <= std_logic_vector(to_unsigned(output, LEDG'length));
