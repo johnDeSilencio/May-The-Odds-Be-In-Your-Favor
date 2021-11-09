@@ -33,6 +33,7 @@ begin
 	begin
         -- defaults to preserve state
         nxt_state <= curr_state;
+        
     
 		case (curr_state) is 
 			when firstRoll =>
@@ -71,6 +72,7 @@ begin
             curr_win_lose_na <= 0; -- N/A
             curr_state <= firstRoll;
         elsif (Clock'event and Clock = '1') then
+            curr_win_lose_na <= nxt_win_lose_na;
             curr_state <= nxt_state;
         end if;
     end process reg_logic;
