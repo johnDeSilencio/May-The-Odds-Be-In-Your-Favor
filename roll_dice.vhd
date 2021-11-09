@@ -7,7 +7,8 @@ entity roll_dice is
 		RB         : in std_logic;
         n_RST      : in std_logic;
         DIE_1      : out integer;
-        DIE_2      : out integer
+        DIE_2      : out integer;
+        NEW_ROLL   : out std_logic -- goes high for one clock cycle when rolls are decided
 	);
 end entity roll_dice;
 
@@ -47,6 +48,7 @@ architecture rtl of roll_dice is
     signal state, next_state : state_type;
     signal next_die_1, next_die_2 : integer;
     signal die_1_reg, die_2_reg : integer;
+    signal next_new_roll, curr_new_roll : std_logic;
     
 begin
 
@@ -98,6 +100,7 @@ begin
                 if (neg_edge = '1') then
                     next_state <= rolling_second_die;
                     next_die_1 <= die_1_roll;
+                    next_new_roll <= '0';
                 else
                     -- do nothing
                 end if;
@@ -105,11 +108,13 @@ begin
                 if (pos_edge = '1') then
                     next_state <= not_rolling;
                     next_die_2 <= die_2_roll;
+                    next_new_roll <= '1';
                 else
                     -- do nothing
                 end if;
             when others =>
-                -- do nothing
+                -- state = not_rolling
+                next_new_roll <= '0';
         end case;
 	end process next_state_logic;
     
@@ -119,16 +124,19 @@ begin
             state <= rolling_first_die;
             die_1_reg <= 0;
             die_2_reg <= 0;
+            curr_new_roll <= '0';
         elsif (CLK = '1' and CLK'event) then
             state <= next_state;
             die_1_reg <= next_die_1;
             die_2_reg <= next_die_2;
+            curr_new_roll <= next_new_roll;
         end if;
     end process reg_logic;
     
     -- dummy assignments
     DIE_1 <= die_1_reg;
     DIE_2 <= die_2_reg;
+    NEW_ROLL <= curr_new_roll;
     
 end architecture rtl;
 		
