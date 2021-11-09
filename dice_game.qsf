@@ -59,3 +59,4 @@ set_global_assignment -name VHDL_FILE random_number_generator.vhd
 set_global_assignment -name VHDL_FILE roll_dice.vhd
 set_global_assignment -name VHDL_FILE counter.vhd
 set_global_assignment -name VHDL_FILE counter_tb.vhd
+set_global_assignment -name VHDL_FILE roll_dice_tb.vhd
