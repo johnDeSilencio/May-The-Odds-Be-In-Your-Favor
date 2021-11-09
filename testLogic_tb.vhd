@@ -134,10 +134,116 @@ architecture beh of testLogic_tb is
         end reset_tb;
         
         --
+        -- test that a win is properly detected in the first roll
+        --
+        procedure run_win_conditions_first_roll is
+        begin
+            reset_tb; -- restart game
+            
+            wait_tb_ck;
+            wait_ck;
+            
+            wait_tb_ck; -- roll a 7
+            die_1 <= 3;
+            die_2 <= 4;
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 2);
+            wait_ck;
+            
+            wait_tb_ck;
+            wait_ck;
+            
+            reset_tb; -- restart game
+            
+            wait_tb_ck;
+            wait_ck;
+            
+            wait_tb_ck; -- roll an 11
+            die_1 <= 5;
+            die_2 <= 6;
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 2);
+            wait_ck;
+            
+            wait_tb_ck;
+            wait_ck;
+        end run_win_conditions_first_roll;
+            
+        
+        --
+        -- test that a lose is properly detected in the first roll
+        --
+        procedure run_lose_conditions_first_roll is
+        begin
+            reset_tb; -- restart game
+            
+            wait_tb_ck;
+            wait_ck;
+            
+            wait_tb_ck; -- roll a 2
+            die_1 <= 1;
+            die_2 <= 1;
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 1);
+            wait_ck;
+            
+            wait_tb_ck;
+            wait_ck;
+            
+            reset_tb; -- restart game
+            
+            wait_tb_ck;
+            wait_ck;
+            
+            wait_tb_ck; -- roll a 3
+            die_1 <= 1;
+            die_2 <= 2;
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 2);
+            wait_ck;
+            
+            wait_tb_ck;
+            wait_ck;
+            
+            reset_tb; -- restart game
+            
+            wait_tb_ck;
+            wait_ck;
+            
+            wait_tb_ck; -- roll a 12
+            die_1 <= 6;
+            die_2 <= 6;
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 2);
+            wait_ck;
+            
+            wait_tb_ck;
+            wait_ck;
+        end run_lose_conditions_first_roll;
+        
+        
+        --
         -- test that the loading of the starting count value works well
         --
         procedure run_all_test_logic_possibilities is
         begin
+            wait_tb_ck;
+            wait_ck;
+            
+            wait_tb_ck;
+            reset_tb;
+            wait_ck;
+        
             for first_dice_roll in 1 to 6 loop
                 for second_dice_roll in 1 to 6 loop
                     wait_tb_ck;
@@ -154,7 +260,13 @@ architecture beh of testLogic_tb is
         initialize_tb;
         reset_tb;
 
-        -- make sure edges are detected correctly
+        -- test the logic for all win conditions in the first roll
+        run_win_conditions_first_roll;
+        
+        -- test the logic for all lose conditions in the first roll
+        run_lose_conditions_first_roll;
+        
+        -- test the logic for all possible first rolls
         run_all_test_logic_possibilities;
 
     
