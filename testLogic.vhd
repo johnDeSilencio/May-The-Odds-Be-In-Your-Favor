@@ -12,12 +12,13 @@ entity testLogic is
 		n_RST	: in std_logic;
 		roll1 : in integer;
 		roll2 : in integer;
+		newRoll :in std_logic;
 		WinLoseNA: out integer
 	);
 end entity testLogic;
 
 architecture rtl of testLogic is
-	type state_type is (firstRoll,afterFirst,idle); --state machine
+	type state_type is (firstRoll,afterFirst, rolling,idle); --state machine
 	signal curr_state : state_type;
 	signal nxt_state : state_type;
 	signal point : integer;
@@ -29,7 +30,7 @@ begin
         roll <= roll1 + roll2;
     end process adder;
     
-	next_state_logic : process(curr_state, roll)
+	next_state_logic : process(curr_state, roll,newRoll)
 	begin
         -- defaults to preserve state
         nxt_state <= curr_state;
@@ -46,6 +47,10 @@ begin
 				else 
 					nxt_win_lose_na <= 0;--nothing
 					point <= roll;
+					nxt_state <= rolling;
+				end if;
+			when rolling =>
+				if newRoll = '1' then
 					nxt_state <= afterFirst;
 				end if;
 			when afterFirst =>
