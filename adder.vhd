@@ -10,7 +10,7 @@ entity adder is
 	port(
 		X   :	in integer;
 		Y   :   in integer
-		Z   :	out integer
+		Z   :	out integer;
 	);
 end entity adder;
 
