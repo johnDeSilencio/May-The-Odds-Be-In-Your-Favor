@@ -13,6 +13,7 @@ entity testLogic is
 		roll1 : in integer;
 		roll2 : in integer;
 		newRoll :in std_logic;
+		resetSig: out std_logic;
 		pointOUT : out integer;
 		rollOUT : out integer;
 		WinLoseNA: out integer
@@ -55,7 +56,7 @@ begin
 					nxt_win_lose_na <= 0;--nothing
 					point <= roll;
 					nxt_state <= rolling2;
-					--Resest <= '1';
+					resetSig <= '1';
 				end if;
 			when rolling2 =>
 				if newRoll = '1' then
@@ -71,7 +72,8 @@ begin
 					nxt_state <= idle;
 				else 
 					nxt_win_lose_na <= 0;--nothing
-					nxt_state <= afterFirst;
+					nxt_state <= rolling2;
+					resetSig <= '1';
 				end if;
 			when idle =>
 				--do nothing
@@ -84,7 +86,7 @@ begin
     begin
         if (n_RST = '0') then
             curr_win_lose_na <= 0; -- N/A
-            curr_state <= firstRoll;
+            curr_state <= rolling1;
         elsif (Clock'event and Clock = '1') then
             curr_win_lose_na <= nxt_win_lose_na;
             curr_state <= nxt_state;
