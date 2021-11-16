@@ -44,7 +44,7 @@ architecture rtl of roll_dice is
     signal die_2_roll   :   integer;
     
     -- FSM
-    type state_type is (rolling_first_die, rolling_second_die, not_rolling);
+    type state_type is (rolling_first_die, rolling_second_die, rolling_second_die_continued_output, not_rolling);
     signal state, next_state : state_type;
     signal next_die_1, next_die_2 : integer;
     signal die_1_reg, die_2_reg : integer;
@@ -106,12 +106,15 @@ begin
                 end if;
             when rolling_second_die =>
                 if (pos_edge = '1') then
-                    next_state <= not_rolling;
+                    next_state <= rolling_second_die_continued_output;
                     next_die_2 <= die_2_roll;
                     next_new_roll <= '1';
                 else
                     -- do nothing
                 end if;
+            when rolling_second_die_continued_output =>
+                next_state <= not_rolling;
+                next_new_roll <= '1';
             when others =>
                 -- state = not_rolling
                 next_new_roll <= '0';

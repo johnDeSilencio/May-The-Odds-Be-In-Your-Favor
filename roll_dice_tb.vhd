@@ -209,6 +209,11 @@ architecture beh of roll_dice_tb is
         -- make sure edges are detected correctly
         run_roll_dice_test;
 
+        -- roll again
+        reset_tb;
+        
+        -- make sure roll dice can be run again successfully
+        run_roll_dice_test;
     
         assert false
         report "End of Simulation"
