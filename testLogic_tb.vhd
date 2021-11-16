@@ -176,9 +176,12 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll an 11
-            new_roll <= '1';
             die_1 <= 5;
             die_2 <= 6;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '1';
             wait_ck;
             
             wait_tb_ck;
@@ -202,9 +205,12 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll a 2
-            new_roll <= '1';
             die_1 <= 1;
             die_2 <= 1;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '1';
             wait_ck;
             
             wait_tb_ck;
@@ -221,9 +227,12 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll a 3
-            new_roll <= '1';
             die_1 <= 1;
             die_2 <= 2;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '1';
             wait_ck;
             
             wait_tb_ck;
@@ -240,9 +249,12 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll a 12
-            new_roll <= '1';
             die_1 <= 6;
             die_2 <= 6;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '1';
             wait_ck;
             
             wait_tb_ck;
@@ -265,9 +277,12 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll a 4
-            new_roll <= '1';
             die_1 <= 3;
             die_2 <= 1;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '1';
             wait_ck;
             
             wait_tb_ck;
@@ -279,9 +294,12 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll a 4
-            new_roll <= '1';
             die_1 <= 2;
             die_2 <= 2;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '1';
             wait_ck;
             
             wait_tb_ck;
@@ -293,6 +311,50 @@ architecture beh of testLogic_tb is
             wait_ck;
         end run_win_conditions_second_roll;
     
+    
+        procedure run_lose_conditions_second_roll is
+        begin
+            reset_tb;   -- restart game
+            
+            wait_tb_ck;
+            wait_ck;
+            
+            wait_tb_ck; -- roll an 8
+            die_1 <= 4;
+            die_2 <= 4;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '1';
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '0';
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 0);
+            wait_ck;
+            
+            wait_tb_ck; -- roll a 7
+            die_1 <= 5;
+            die_2 <= 2;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '1';
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '0';
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 1); -- verify the loss
+            wait_ck;
+        end run_lose_conditions_second_roll;
+            
+            
     
     begin -- testbench process
     
@@ -306,8 +368,11 @@ architecture beh of testLogic_tb is
         -- test the logic for all lose conditions in the first roll
         run_lose_conditions_first_roll;
 
-        -- test the player winning if the players gets the point again in the second roll
+        -- test the player winning if the player gets the point again in the second roll
         run_win_conditions_second_roll;
+        
+        -- test the player losing if the player rolls a 7 in the second roll
+        run_lose_conditions_second_roll;
     
         assert false
         report "End of Simulation"
