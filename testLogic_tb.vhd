@@ -9,11 +9,14 @@ architecture beh of testLogic_tb is
     
     component testLogic
             port(
-                Clock       : in std_logic;
-                n_RST	    : in std_logic;
-                roll1       : in integer;
-                roll2       : in integer;
-                WinLoseNA   : out integer
+                Clock : in std_logic;
+                n_RST	: in std_logic;
+                roll1 : in integer;
+                roll2 : in integer;
+                newRoll :in std_logic;
+                pointOUT : out integer;
+                rollOUT : out integer;
+                WinLoseNA: out integer
             );
     end component testLogic;
     
@@ -29,6 +32,9 @@ architecture beh of testLogic_tb is
     signal n_rst        : std_logic;
     signal die_1        : integer;
     signal die_2        : integer;
+    signal new_roll     : std_logic;
+    signal point_out    : integer;
+    signal roll_out     : integer;
     signal win_lose_na  : integer;
     
     
@@ -41,6 +47,9 @@ architecture beh of testLogic_tb is
             n_RST => n_rst,
             roll1 => die_1,
             roll2 => die_2,
+            newRoll => new_roll,
+            pointOUT => point_out,
+            rollOUT => roll_out,
             WinLoseNA => win_lose_na
         );
     
@@ -117,6 +126,7 @@ architecture beh of testLogic_tb is
         procedure initialize_tb is
         begin
             n_rst       <= '1';
+            new_roll    <= '0';
             die_1       <= 0;
             die_2       <= 0;  
         end initialize_tb;
@@ -149,10 +159,15 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck;
-            check_exp_val(win_lose_na, 2);
+            new_roll <= '1';
             wait_ck;
             
             wait_tb_ck;
+            new_roll <= '0';
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 2);
             wait_ck;
             
             reset_tb; -- restart game
@@ -161,15 +176,17 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll an 11
+            new_roll <= '1';
             die_1 <= 5;
             die_2 <= 6;
             wait_ck;
             
             wait_tb_ck;
-            check_exp_val(win_lose_na, 2);
+            new_roll <= '0';
             wait_ck;
             
             wait_tb_ck;
+            check_exp_val(win_lose_na, 2);
             wait_ck;
         end run_win_conditions_first_roll;
             
@@ -185,15 +202,17 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll a 2
+            new_roll <= '1';
             die_1 <= 1;
             die_2 <= 1;
             wait_ck;
             
             wait_tb_ck;
-            check_exp_val(win_lose_na, 1);
+            new_roll <= '0';
             wait_ck;
             
             wait_tb_ck;
+            check_exp_val(win_lose_na, 1);
             wait_ck;
             
             reset_tb; -- restart game
@@ -202,15 +221,17 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll a 3
+            new_roll <= '1';
             die_1 <= 1;
             die_2 <= 2;
             wait_ck;
             
             wait_tb_ck;
-            check_exp_val(win_lose_na, 2);
+            new_roll <= '0';
             wait_ck;
             
             wait_tb_ck;
+            check_exp_val(win_lose_na, 1);
             wait_ck;
             
             reset_tb; -- restart game
@@ -219,40 +240,59 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll a 12
+            new_roll <= '1';
             die_1 <= 6;
             die_2 <= 6;
             wait_ck;
             
             wait_tb_ck;
-            check_exp_val(win_lose_na, 2);
+            new_roll <= '0';
             wait_ck;
             
             wait_tb_ck;
+            check_exp_val(win_lose_na, 1);
             wait_ck;
         end run_lose_conditions_first_roll;
         
         
         --
-        -- test that the loading of the starting count value works well
-        --
-        procedure run_all_test_logic_possibilities is
+        -- test that the 
+        procedure run_win_conditions_second_roll is
         begin
+            reset_tb; -- restart game
+            
             wait_tb_ck;
             wait_ck;
             
-            wait_tb_ck;
-            reset_tb;
+            wait_tb_ck; -- roll a 4
+            new_roll <= '1';
+            die_1 <= 3;
+            die_2 <= 1;
             wait_ck;
-        
-            for first_dice_roll in 1 to 6 loop
-                for second_dice_roll in 1 to 6 loop
-                    wait_tb_ck;
-                    die_1 <= first_dice_roll;
-                    die_2 <= second_dice_roll;
-                    wait_ck;
-                end loop;
-            end loop;
-        end run_all_test_logic_possibilities;
+            
+            wait_tb_ck;
+            new_roll <= '0';
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 0);
+            wait_ck;
+            
+            wait_tb_ck; -- roll a 4
+            new_roll <= '1';
+            die_1 <= 2;
+            die_2 <= 2;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '0';
+            wait_ck;
+            
+            wait_tb_ck;
+            check_exp_val(win_lose_na, 2);
+            wait_ck;
+        end run_win_conditions_second_roll;
+    
     
     begin -- testbench process
     
@@ -265,10 +305,9 @@ architecture beh of testLogic_tb is
         
         -- test the logic for all lose conditions in the first roll
         run_lose_conditions_first_roll;
-        
-        -- test the logic for all possible first rolls
-        run_all_test_logic_possibilities;
 
+        -- test the player winning if the players gets the point again in the second roll
+        run_win_conditions_second_roll;
     
         assert false
         report "End of Simulation"
