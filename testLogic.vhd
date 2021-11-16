@@ -95,7 +95,7 @@ begin
     
     -- dummy assignment
     WinLoseNA <= curr_win_lose_na;
-	 pointOUT <= point;
-	 rollOUT <= roll;
+    rollOUT <= roll;
+    pointOUT <= point;
     
 end architecture rtl;
