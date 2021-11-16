@@ -38,7 +38,7 @@ begin
         -- defaults to preserve state
         nxt_state <= curr_state;
 		  nxt_win_lose_na <= curr_win_lose_na;
-    
+        resetSig <= '1';
 		case (curr_state) is 
 			when rolling1 =>
 				if newRoll = '1' then
@@ -56,7 +56,7 @@ begin
 					nxt_win_lose_na <= 0;--nothing
 					point <= roll;
 					nxt_state <= rolling2;
-					resetSig <= '1';
+					resetSig <= '0';
 				end if;
 			when rolling2 =>
 				if newRoll = '1' then
@@ -73,7 +73,7 @@ begin
 				else 
 					nxt_win_lose_na <= 0;--nothing
 					nxt_state <= rolling2;
-					resetSig <= '1';
+					resetSig <= '0';
 				end if;
 			when idle =>
 				--do nothing

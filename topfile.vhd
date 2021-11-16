@@ -8,7 +8,7 @@ entity topfile is
 		CLOCK_50    :   in std_logic;
 		LED	:	out std_logic_vector(3 downto 0);
 		LEDL	:	out std_logic_vector(3 downto 0);
-		LEDR	:	out std_logic_vector(3 downto 0)
+		LEDR	:	out std_logic_vector(1 downto 0)
 	);
 end entity topfile;
 
@@ -52,8 +52,8 @@ begin
 	
 	roll1: roll_dice port map(
 							CLOCK_50,
+							KEY(3),
 							orr,
-							KEY(0),
 							DIE_1,
 							DIE_2,
 							newRoll);
@@ -72,8 +72,8 @@ begin
 	
 	LED(3 downto 0) <= std_logic_vector(to_unsigned(outRoll, 4));
 	LEDL(3 downto 0) <= std_logic_vector(to_unsigned(outPoint, 4));
-	LEDR(3 downto 0) <= std_logic_vector(to_unsigned(Win_Lose, 4));			
-	orr <= KEY(3) or reset_sig;
+	LEDR(1 downto 0) <= std_logic_vector(to_unsigned(Win_Lose, 2));			
+	orr <= KEY(0) and reset_sig;
 	
 	
 end architecture struct;
