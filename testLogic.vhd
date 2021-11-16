@@ -84,7 +84,7 @@ begin
     begin
         if (n_RST = '0') then
             curr_win_lose_na <= 0; -- N/A
-            curr_state <= firstRoll;
+            curr_state <= rolling1;
         elsif (Clock'event and Clock = '1') then
             curr_win_lose_na <= nxt_win_lose_na;
             curr_state <= nxt_state;
