@@ -93,10 +93,8 @@ set_location_assignment PIN_G20 -to LEDL[1]
 set_location_assignment PIN_G22 -to LEDL[2]
 set_location_assignment PIN_G21 -to LEDL[3]
 set_location_assignment PIN_F17 -to LEDG
-set_location_assignment PIN_G19 -to LEDR[0]
-set_location_assignment PIN_E19 -to LEDR[2]
-set_location_assignment PIN_F19 -to LEDR[1]
-set_location_assignment PIN_F21 -to LEDR[3]
+set_location_assignment PIN_F21 -to LEDR[0]
+set_location_assignment PIN_F18 -to LEDR[1]
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name VHDL_FILE testLogic_tb.vhd
 set_global_assignment -name VHDL_FILE roll_dice_tb.vhd

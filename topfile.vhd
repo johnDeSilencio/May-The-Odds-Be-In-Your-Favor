@@ -8,7 +8,7 @@ entity topfile is
 		CLOCK_50    :   in std_logic;
 		LED	:	out std_logic_vector(3 downto 0);
 		LEDL	:	out std_logic_vector(3 downto 0);
-		LEDR	:	out std_logic_vector(3 downto 0)
+		LEDR	:	out std_logic_vector(1 downto 0)
 	);
 end entity topfile;
 
@@ -21,9 +21,11 @@ architecture struct of topfile is
 		roll1 : in integer;
 		roll2 : in integer;
 		newRoll :in std_logic;
+		resetSig: out std_logic;
 		pointOUT : out integer;
 		rollOUT : out integer;
-		WinLoseNA: out integer);
+		WinLoseNA: out integer
+	);
 	end component;
 	
 	component roll_dice
@@ -44,12 +46,14 @@ architecture struct of topfile is
 	signal outpoint : integer;
 	signal newRoll : std_logic;
 	signal Win_Lose : integer;
+	signal reset_sig : std_logic;
+	signal orr : std_logic;
 begin
-
+	
 	roll1: roll_dice port map(
 							CLOCK_50,
 							KEY(3),
-							KEY(0),
+							orr,
 							DIE_1,
 							DIE_2,
 							newRoll);
@@ -61,14 +65,15 @@ begin
 							DIE_1,
 							DIE_2,
 							newRoll,
+							reset_sig,
 							outPoint,
 							outRoll,
 							Win_Lose);
 	
 	LED(3 downto 0) <= std_logic_vector(to_unsigned(outRoll, 4));
 	LEDL(3 downto 0) <= std_logic_vector(to_unsigned(outPoint, 4));
-	LEDR(3 downto 0) <= std_logic_vector(to_unsigned(Win_Lose, 4));			
-	--LEDG(8) <= std_logic_vector(to_unsigned(outPoint, 4));
+	LEDR(1 downto 0) <= std_logic_vector(to_unsigned(Win_Lose, 2));			
+	orr <= KEY(0) and reset_sig;
 	
 	
 end architecture struct;
