@@ -41,7 +41,7 @@ entity lcd_driver is
 end lcd_driver;
 
 architecture rtl of lcd_driver is
-	type state_t is (fs1, fs2, fs3, fs4, cld, ctd, em, sa1, sa2, sa3, rh,
+	type state_t is (fs1, fs2, fs3, fs4, cld, ctd, em, sa2,
                      wd1,       -- (C)   or (Y)
                      wd2,       -- (R)   or (O)
                      wd3,       -- (A)   or (U)
@@ -80,7 +80,15 @@ architecture rtl of lcd_driver is
                      wd36,      -- [tens digit of roll]
                      wd37       -- [ones digit of roll]
                 );
-                
+    
+    -- game logic signals
+    signal win_lose_na : integer;
+    signal point : integer;
+    signal die_roll_1 : integer;
+    signal die_roll_2 : integer;
+    signal roll : integer; -- die_roll_1 + die_roll_2
+    
+    
     -- ASCII letter constant declerations
     constant c_letter : std_logic_vector(7 downto 0) := "01000011";
     constant r_letter : std_logic_vector(7 downto 0) := "01010010";
@@ -517,7 +525,7 @@ BEGIN
                     when others =>
                         -- do nothing
                 end case;
-				next_state <= rh;
+				next_state <= fs1;
 		end case;
 	end process machine;
 	

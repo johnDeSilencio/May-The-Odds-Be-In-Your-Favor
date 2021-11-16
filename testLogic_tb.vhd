@@ -154,9 +154,12 @@ architecture beh of testLogic_tb is
             wait_ck;
             
             wait_tb_ck; -- roll a 7
-            new_roll <= '1';
             die_1 <= 3;
             die_2 <= 4;
+            wait_ck;
+            
+            wait_tb_ck;
+            new_roll <= '1';
             wait_ck;
             
             wait_tb_ck;

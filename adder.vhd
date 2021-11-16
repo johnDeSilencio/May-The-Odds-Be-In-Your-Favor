@@ -9,7 +9,7 @@ use ieee.std_logic_1164.all;
 entity adder is
 	port(
 		X   :	in integer;
-		Y   :   in integer
+		Y   :   in integer;
 		Z   :	out integer
 	);
 end entity adder;

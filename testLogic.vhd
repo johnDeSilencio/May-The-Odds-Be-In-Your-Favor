@@ -13,6 +13,8 @@ entity testLogic is
 		roll1 : in integer;
 		roll2 : in integer;
 		newRoll :in std_logic;
+        pointOUT : out integer;
+        rollOUT : out integer;
 		WinLoseNA: out integer
 	);
 end entity testLogic;
@@ -75,7 +77,7 @@ begin
     begin
         if (n_RST = '0') then
             curr_win_lose_na <= 0; -- N/A
-            curr_state <= rolling1;
+            curr_state <= firstRoll;
         elsif (Clock'event and Clock = '1') then
             curr_win_lose_na <= nxt_win_lose_na;
             curr_state <= nxt_state;
@@ -84,5 +86,7 @@ begin
     
     -- dummy assignment
     WinLoseNA <= curr_win_lose_na;
+    rollOUT <= roll;
+    pointOUT <= point;
     
 end architecture rtl;
