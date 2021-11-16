@@ -13,34 +13,39 @@ entity testLogic is
 		roll1 : in integer;
 		roll2 : in integer;
 		newRoll :in std_logic;
-        pointOUT : out integer;
-        rollOUT : out integer;
+		pointOUT : out integer;
+		rollOUT : out integer;
 		WinLoseNA: out integer
 	);
 end entity testLogic;
 
 architecture rtl of testLogic is
-	type state_type is (firstRoll,afterFirst, rolling,idle); --state machine
-	signal curr_state : state_type;
+	type state_type is (firstRoll,afterFirst, rolling1, rolling2, idle); --state machine
+	signal curr_state : state_type := rolling1;
 	signal nxt_state : state_type;
 	signal point : integer;
 	signal roll : integer;
-    signal curr_win_lose_na, nxt_win_lose_na : integer;
+   signal curr_win_lose_na, nxt_win_lose_na : integer;
 begin
     adder : process(roll1, roll2)
     begin
         roll <= roll1 + roll2;
     end process adder;
     
-	next_state_logic : process(curr_state, roll,newRoll)
+	next_state_logic : process(curr_state,newRoll,curr_win_lose_na)
 	begin
         -- defaults to preserve state
         nxt_state <= curr_state;
-        
+		  nxt_win_lose_na <= curr_win_lose_na;
     
 		case (curr_state) is 
+			when rolling1 =>
+				if newRoll = '1' then
+					nxt_state <= firstRoll;
+					nxt_win_lose_na <= 0;--nothing
+				end if;
 			when firstRoll =>
-				if(roll = 7 or roll = 11) then 
+				if roll = 7 or roll = 11 then 
 					nxt_win_lose_na <= 2;--win
 					nxt_state <= idle;
 				elsif roll = 2 or roll = 3 or roll = 12 then
@@ -49,11 +54,13 @@ begin
 				else 
 					nxt_win_lose_na <= 0;--nothing
 					point <= roll;
-					nxt_state <= rolling;
+					nxt_state <= rolling2;
+					--Resest <= '1';
 				end if;
-			when rolling =>
+			when rolling2 =>
 				if newRoll = '1' then
 					nxt_state <= afterFirst;
+					nxt_win_lose_na <= 0;--nothing
 				end if;
 			when afterFirst =>
 				if roll = 7 then
