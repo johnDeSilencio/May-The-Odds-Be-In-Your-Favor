@@ -67,25 +67,19 @@ architecture rtl of lcd_driver is
                      wd16,      -- [ones digit of point]
                      wd17,      -- D
                      wd18,      -- 1
-                     wd19,      -- ' '
-                     wd20,      -- =
-                     wd21,      -- ' '
-                     wd22,      -- [result of roll for die 1]
-                     wd23,      -- ' '
-                     wd24,      -- +
-                     wd25,      -- ' '
-                     wd26,      -- D
-                     wd27,      -- 2
-                     wd28,      -- ' '
-                     wd29,      -- =
-                     wd30,      -- ' '
-                     wd31,      -- [result of roll for die 2]
-                     wd32,      -- ' '
-                     wd33,      -- '-'
-                     wd34,      -- '>'
-                     wd35,      -- ' '
-                     wd36,      -- [tens digit of roll]
-                     wd37       -- [ones digit of roll]
+                     wd19,      -- =
+                     wd20,      -- [result of roll for die 1]
+                     wd21,      -- +
+                     wd22,      -- D
+                     wd23,      -- 2
+                     wd24,      -- =
+                     wd25,      -- [result of roll for die 2]
+                     wd26,      -- ' '
+                     wd27,      -- '-'
+                     wd28,      -- '>'
+                     wd29,      -- ' '
+                     wd30,      -- [tens digit of roll]
+                     wd31       -- [ones digit of roll]
                 );
     
     
@@ -189,7 +183,7 @@ BEGIN
 	--
 	-- state machine driving the LCD
 	--
-	machine: process(state, digit, lcdon)
+	machine: process(state, digit, lcdon, roll)
 	begin
 		-- default
 		next_state  <= state;
@@ -280,7 +274,7 @@ BEGIN
             when wd7 =>
                 rs <= '1'; rw <= '0';
                 if (win_lose_na = 0) then
-                    db <= ""; -- ' ' 
+                    db <= space; -- ' ' 
                 elsif (win_lose_na = 1) then
                     db <= n_letter; -- 'N'
                 else
@@ -388,17 +382,9 @@ BEGIN
 				next_state <= wd19;
             when wd19 =>
 				rs <= '1'; rw <= '0';
-				db <= space; -- ' '
+				db <= equals; -- =
 				next_state <= wd20;
             when wd20 =>
-				rs <= '1'; rw <= '0';
-				db <= equals; -- =
-				next_state <= wd21;
-            when wd21 =>
-				rs <= '1'; rw <= '0';
-				db <= space; -- ' '
-				next_state <= wd22;
-            when wd22 =>
 				rs <= '1'; rw <= '0';
                 case die_roll_1 is
                     when 1 =>
@@ -416,40 +402,24 @@ BEGIN
                     when others =>
                         -- do nothing
                 end case;
+				next_state <= wd21;
+            when wd21 =>
+				rs <= '1'; rw <= '0';
+				db <= plus; -- +
+				next_state <= wd22;
+            when wd22 =>
+				rs <= '1'; rw <= '0';
+				db <= d_letter; -- D
 				next_state <= wd23;
             when wd23 =>
 				rs <= '1'; rw <= '0';
-				db <= space; -- ' '
+				db <= num_two; -- 2
 				next_state <= wd24;
             when wd24 =>
 				rs <= '1'; rw <= '0';
-				db <= plus; -- +
+				db <= equals; -- =
 				next_state <= wd25;
             when wd25 =>
-				rs <= '1'; rw <= '0';
-				db <= space; -- ' '
-				next_state <= wd26;
-            when wd26 =>
-				rs <= '1'; rw <= '0';
-				db <= d_letter; -- D
-				next_state <= wd27;
-            when wd27 =>
-				rs <= '1'; rw <= '0';
-				db <= num_two; -- 2
-				next_state <= wd28;
-            when wd28 =>
-				rs <= '1'; rw <= '0';
-				db <= space; -- ' '
-				next_state <= wd29;
-            when wd29 =>
-				rs <= '1'; rw <= '0';
-				db <= equals; -- =
-				next_state <= wd30;
-            when wd30 =>
-				rs <= '1'; rw <= '0';
-				db <= space; -- ' '
-				next_state <= wd31;
-            when wd31 =>
 				rs <= '1'; rw <= '0';
 				case die_roll_2 is
                     when 1 =>
@@ -467,24 +437,24 @@ BEGIN
                     when others =>
                         -- do nothing
                 end case;
-				next_state <= wd32;
-            when wd32 =>
+				next_state <= wd26;
+            when wd26 =>
 				rs <= '1'; rw <= '0';
 				db <= space; -- ' '
-				next_state <= wd33;
-            when wd33 =>
+				next_state <= wd27;
+            when wd27 =>
 				rs <= '1'; rw <= '0';
 				db <= hyphen; -- -
-				next_state <= wd34;
-            when wd34 =>
+				next_state <= wd28;
+            when wd28 =>
 				rs <= '1'; rw <= '0';
 				db <= greater_than; -- >
-				next_state <= wd35;
-            when wd35 =>
+				next_state <= wd29;
+            when wd29 =>
 				rs <= '1'; rw <= '0';
 				db <= space; -- ' '
-				next_state <= wd36;
-            when wd36 =>
+				next_state <= wd30;
+            when wd30 =>
 				rs <= '1'; rw <= '0';
 				case roll is
                     when 10 =>
@@ -496,8 +466,8 @@ BEGIN
                     when others =>
                         db <= num_zero;
                 end case;
-				next_state <= wd37;
-            when wd37 =>
+				next_state <= wd31;
+            when wd31 =>
 				rs <= '1'; rw <= '0';
 				case roll is
                     when 2 =>
