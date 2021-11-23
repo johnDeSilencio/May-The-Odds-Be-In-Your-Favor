@@ -23,7 +23,7 @@ architecture rtl of testLogic is
 	type state_type is (firstRoll,afterFirst, rolling1, rolling2, idle); --state machine
 	signal curr_state : state_type := rolling1;
 	signal nxt_state : state_type;
-	signal point : integer;
+	signal nxt_point, point : integer;
 	signal roll : integer;
    signal curr_win_lose_na, nxt_win_lose_na : integer;
 begin
@@ -32,11 +32,12 @@ begin
         roll <= roll1 + roll2;
     end process adder;
     
-	next_state_logic : process(curr_state,newRoll,curr_win_lose_na)
+	next_state_logic : process(curr_state,newRoll,curr_win_lose_na,point)
 	begin
         -- defaults to preserve state
         nxt_state <= curr_state;
-		  nxt_win_lose_na <= curr_win_lose_na;
+		nxt_win_lose_na <= curr_win_lose_na;
+        nxt_point <= point;
     
 		case (curr_state) is 
 			when rolling1 =>
@@ -53,9 +54,9 @@ begin
 					nxt_state <= idle;
 				else 
 					nxt_win_lose_na <= 0;--nothing
-					point <= roll;
+					nxt_point <= roll;
 					nxt_state <= rolling2;
-					--Resest <= '1';
+					--Reset <= '1';
 				end if;
 			when rolling2 =>
 				if newRoll = '1' then
@@ -83,6 +84,7 @@ begin
     reg_logic : process(n_RST, Clock)
     begin
         if (n_RST = '0') then
+            point <= 0; -- N/A
             curr_win_lose_na <= 0; -- N/A
             curr_state <= rolling1;
         elsif (Clock'event and Clock = '1') then
