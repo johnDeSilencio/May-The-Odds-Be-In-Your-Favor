@@ -64,13 +64,13 @@ architecture struct of topfile is
 	signal outpoint : integer;
 	signal newRoll : std_logic;
 	signal Win_Lose : integer;
-    
-begin
 
+begin
+	
 	roll1: roll_dice port map(
 							CLOCK_50,
 							KEY(3),
-							KEY(0),
+							orr,
 							DIE_1,
 							DIE_2,
 							newRoll);
@@ -82,6 +82,7 @@ begin
 							DIE_1,
 							DIE_2,
 							newRoll,
+							reset_sig,
 							outPoint,
 							outRoll,
 							Win_Lose);
@@ -104,8 +105,8 @@ begin
 	
 	LED(3 downto 0) <= std_logic_vector(to_unsigned(outRoll, 4));
 	LEDL(3 downto 0) <= std_logic_vector(to_unsigned(outPoint, 4));
-	LEDR(3 downto 0) <= std_logic_vector(to_unsigned(Win_Lose, 4));			
-	--LEDG(8) <= std_logic_vector(to_unsigned(outPoint, 4));
+	LEDR(1 downto 0) <= std_logic_vector(to_unsigned(Win_Lose, 2));			
+	orr <= KEY(0) and reset_sig;
 	
 	
 end architecture struct;
