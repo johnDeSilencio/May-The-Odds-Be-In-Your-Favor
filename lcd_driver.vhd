@@ -36,7 +36,14 @@ entity lcd_driver is
 		selectrw    : out std_logic; -- read/write
 		en          : out std_logic; -- enable
 		lcd_on      : out std_logic; -- lcd power ON
-		db          : out std_logic_vector(7 DOWNTO 0)
+		db          : out std_logic_vector(7 DOWNTO 0);
+        
+        -- Game logic specific I/O
+        win_lose_na  : in integer;
+        point        : in integer;
+        die_roll_1   : in integer;
+        die_roll_2   : in integer;
+        roll         : in integer -- die_roll_1 + die_roll_2
 	);
 end lcd_driver;
 
@@ -80,13 +87,6 @@ architecture rtl of lcd_driver is
                      wd36,      -- [tens digit of roll]
                      wd37       -- [ones digit of roll]
                 );
-    
-    -- game logic signals
-    signal win_lose_na : integer;
-    signal point : integer;
-    signal die_roll_1 : integer;
-    signal die_roll_2 : integer;
-    signal roll : integer; -- die_roll_1 + die_roll_2
     
     
     -- ASCII letter constant declerations
