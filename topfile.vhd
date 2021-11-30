@@ -62,7 +62,8 @@ architecture struct of topfile is
             point        : in integer;
             die_roll_1   : in integer;
             die_roll_2   : in integer;
-            roll         : in integer -- die_roll_1 + die_roll_2
+            roll         : in integer; -- die_roll_1 + die_roll_2
+				newRoll		: in std_logic
         );
     end component;
 		
@@ -111,7 +112,8 @@ begin
                             point => outpoint,
                             die_roll_1 => DIE_1,
                             die_roll_2 => DIE_2,
-                            roll => outRoll);
+                            roll => outRoll,
+									 newRoll=> newRoll);
 	
 	LED(3 downto 0) <= std_logic_vector(to_unsigned(outRoll, 4));
 	LEDL(3 downto 0) <= std_logic_vector(to_unsigned(outpoint, 4));
