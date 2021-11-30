@@ -21,8 +21,8 @@ set_location_assignment PIN_G20 -to LEDL[1]
 set_location_assignment PIN_G22 -to LEDL[2]
 set_location_assignment PIN_G21 -to LEDL[3]
 
-set_location_assignment PIN_G19 -to LEDR[0]
-set_location_assignment PIN_E19 -to LEDR[1]
+set_location_assignment PIN_F21 -to LEDR[0]
+set_location_assignment PIN_F18 -to LEDR[1]
 
 # LCD
 

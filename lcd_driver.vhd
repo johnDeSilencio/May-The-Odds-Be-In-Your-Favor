@@ -48,7 +48,7 @@ entity lcd_driver is
 end lcd_driver;
 
 architecture rtl of lcd_driver is
-	type state_t is (fs1, fs2, fs3, fs4, cld, ctd, em, sa2,
+	type state_t is (fs1, fs2, fs3, fs4, cld, ctd, em, sa2, rh,
                      wd1,       -- (C)   or (Y)
                      wd2,       -- (R)   or (O)
                      wd3,       -- (A)   or (U)
@@ -95,7 +95,7 @@ architecture rtl of lcd_driver is
     constant w_letter : std_logic_vector(7 downto 0) := "01010111";
     constant n_letter : std_logic_vector(7 downto 0) := "01001110";
     constant l_letter : std_logic_vector(7 downto 0) := "01001100";
-    constant t_letter : std_logic_vector(7 downto 0) := "01000100";
+    constant t_letter : std_logic_vector(7 downto 0) := "01010100";
     constant d_letter : std_logic_vector(7 downto 0) := "01000100";
     
     -- ASCII number declaration
@@ -276,9 +276,9 @@ BEGIN
                 if (win_lose_na = 0) then
                     db <= space; -- ' ' 
                 elsif (win_lose_na = 1) then
-                    db <= n_letter; -- 'N'
-                else
                     db <= s_letter; -- 'S'
+                else
+                    db <= n_letter; -- 'N'
                 end if;
                 next_state <= wd8;
             when wd8 =>
@@ -286,9 +286,9 @@ BEGIN
                 if (win_lose_na = 0) then
                     db <= space; -- ' ' 
                 elsif (win_lose_na = 1) then
-                    db <= exclamation; -- '!'
-                else
                     db <= t_letter; -- 'T'
+                else
+                    db <= exclamation; -- '!'
                 end if;
                 next_state <= wd9;
             when wd9 =>
@@ -400,7 +400,7 @@ BEGIN
                     when 6 =>
                         db <= num_six;
                     when others =>
-                        -- do nothing
+                        db <= num_zero; -- hasn't rolled yet
                 end case;
 				next_state <= wd21;
             when wd21 =>
@@ -435,7 +435,7 @@ BEGIN
                     when 6 =>
                         db <= num_six;
                     when others =>
-                        -- do nothing
+                        db <= num_zero; -- hasn't rolled yet
                 end case;
 				next_state <= wd26;
             when wd26 =>
@@ -470,6 +470,8 @@ BEGIN
             when wd31 =>
 				rs <= '1'; rw <= '0';
 				case roll is
+                    when 0 =>
+                        db <= num_zero; -- hasn't rolled yet
                     when 2 =>
                         db <= num_two;
                     when 3 =>
@@ -495,7 +497,11 @@ BEGIN
                     when others =>
                         -- do nothing
                 end case;
-				next_state <= fs1;
+				next_state <= rh;
+            when rh =>
+                rs <= '0'; rw <= '0';
+                db <= "10000000";
+                next_state <= wd1;
 		end case;
 	end process machine;
 	

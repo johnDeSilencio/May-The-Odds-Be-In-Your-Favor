@@ -27,18 +27,21 @@ architecture rtl of testLogic is
 	signal nxt_point, point : integer;
 	signal roll : integer;
    signal curr_win_lose_na, nxt_win_lose_na : integer;
+   signal curr_resetSig, nxt_resetSig : std_logic;
+   
 begin
     adder : process(roll1, roll2)
     begin
         roll <= roll1 + roll2;
     end process adder;
     
-	next_state_logic : process(curr_state,newRoll,curr_win_lose_na,point)
+	next_state_logic : process(curr_state,newRoll,curr_win_lose_na,point,curr_resetSig)
 	begin
         -- defaults to preserve state
         nxt_state <= curr_state;
-		    nxt_win_lose_na <= curr_win_lose_na;
+		nxt_win_lose_na <= curr_win_lose_na;
         nxt_point <= point;
+        nxt_resetSig <= '1';
 		case (curr_state) is 
 			when rolling1 =>
 				if newRoll = '1' then
@@ -73,7 +76,7 @@ begin
 				else 
 					nxt_win_lose_na <= 0;--nothing
 					nxt_state <= rolling2;
-					resetSig <= '0';
+					nxt_resetSig <= '0';
 				end if;
 			when idle =>
 				--do nothing
@@ -88,9 +91,11 @@ begin
             point <= 0; -- N/A
             curr_win_lose_na <= 0; -- N/A
             curr_state <= rolling1;
+            curr_resetSig <= '1';
         elsif (Clock'event and Clock = '1') then
             curr_win_lose_na <= nxt_win_lose_na;
             curr_state <= nxt_state;
+            curr_resetSig <= nxt_resetSig;
         end if;
     end process reg_logic;
     
@@ -98,5 +103,6 @@ begin
     WinLoseNA <= curr_win_lose_na;
     rollOUT <= roll;
     pointOUT <= point;
+    resetSig <= curr_resetSig;
     
 end architecture rtl;
