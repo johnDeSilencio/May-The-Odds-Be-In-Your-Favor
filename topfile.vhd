@@ -93,7 +93,7 @@ begin
 							roll2 => DIE_2,
 							newRoll => newRoll,
 							resetSig => reset_sig,
-							pointOUT => outPoint,
+							pointOUT => outpoint,
 							rollOUT => outRoll,
 							WinLoseNA => Win_Lose);
                             
@@ -114,7 +114,7 @@ begin
                             roll => outRoll);
 	
 	LED(3 downto 0) <= std_logic_vector(to_unsigned(outRoll, 4));
-	LEDL(3 downto 0) <= std_logic_vector(to_unsigned(outPoint, 4));
+	LEDL(3 downto 0) <= std_logic_vector(to_unsigned(outpoint, 4));
 	LEDR(1 downto 0) <= std_logic_vector(to_unsigned(Win_Lose, 2));			
 	orr <= KEY(0) and reset_sig;
 	
