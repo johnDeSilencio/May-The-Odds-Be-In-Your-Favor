@@ -317,53 +317,45 @@ BEGIN
 				next_state <= wd15;
             when wd15 =>
 				rs <= '1'; rw <= '0';
-				if (win_lose_na = 0) then
-                    db <= n_letter; -- N
-                else
-                    case point is
-                        when 10 =>
-                            db <= num_one;
-                        when 11 =>
-                            db <= num_one;
-                        when 12 =>
-                            db <= num_one;
-                        when others =>
-                            db <= num_zero;
-                    end case;
-                end if;
+                case point is
+                    when 10 =>
+                        db <= num_one;
+                    when 11 =>
+                        db <= num_one;
+                    when 12 =>
+                        db <= num_one;
+                    when others =>
+                        db <= num_zero;
+                end case;
 				next_state <= wd16;
             when wd16 =>
 				rs <= '1'; rw <= '0';
-                if (win_lose_na = 0) then
-                    db <= a_letter; -- A
-                else
-                    case point is
-                        when 2 =>
-                            db <= num_two;
-                        when 3 =>
-                            db <= num_three;
-                        when 4 =>
-                            db <= num_four;
-                        when 5 =>
-                            db <= num_five;
-                        when 6 =>
-                            db <= num_six;
-                        when 7 =>
-                            db <= num_seven;
-                        when 8 =>
-                            db <= num_eight;
-                        when 9 =>
-                            db <= num_nine;
-                        when 10 =>
-                            db <= num_zero;
-                        when 11 =>
-                            db <= num_one;
-                        when 12 =>
-                            db <= num_two;
-                        when others =>
-                            -- do nothing
-                    end case;
-                end if;
+                case point is
+                    when 2 =>
+                        db <= num_two;
+                    when 3 =>
+                        db <= num_three;
+                    when 4 =>
+                        db <= num_four;
+                    when 5 =>
+                        db <= num_five;
+                    when 6 =>
+                        db <= num_six;
+                    when 7 =>
+                        db <= num_seven;
+                    when 8 =>
+                        db <= num_eight;
+                    when 9 =>
+                        db <= num_nine;
+                    when 10 =>
+                        db <= num_zero;
+                    when 11 =>
+                        db <= num_one;
+                    when 12 =>
+                        db <= num_two;
+                    when others =>
+                        -- do nothing
+                end case;
 				next_state <= sa2;
                 
             when sa2 =>
