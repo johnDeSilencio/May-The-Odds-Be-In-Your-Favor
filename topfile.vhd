@@ -78,12 +78,12 @@ architecture struct of topfile is
 begin
 	
 	roll1: roll_dice port map(
-							CLOCK_50,
-							KEY(3),
-							orr,
-							DIE_1,
-							DIE_2,
-							newRoll);
+							CLK => CLOCK_50,
+							RB => KEY(3),
+							n_RST => orr,
+							DIE_1 => DIE_1,
+							DIE_2 => DIE_2,
+							NEW_ROLL => newRoll);
 	
 	
 	logic1: testLogic port map(

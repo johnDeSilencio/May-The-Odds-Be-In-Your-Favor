@@ -59,7 +59,7 @@ begin
 					nxt_win_lose_na <= 0;--nothing
 					nxt_point <= roll;
 					nxt_state <= rolling2;
-					--Reset <= '1';
+					nxt_resetSig <= '0';
 				end if;
 			when rolling2 =>
 				if newRoll = '1' then
@@ -96,6 +96,7 @@ begin
             curr_win_lose_na <= nxt_win_lose_na;
             curr_state <= nxt_state;
             curr_resetSig <= nxt_resetSig;
+            point <= nxt_point;
         end if;
     end process reg_logic;
     
