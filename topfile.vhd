@@ -28,6 +28,7 @@ architecture struct of topfile is
             roll1 : in integer;
             roll2 : in integer;
             newRoll :in std_logic;
+            resetSig : out std_logic;
             pointOUT : out integer;
             rollOUT : out integer;
             WinLoseNA: out integer
@@ -54,7 +55,14 @@ architecture struct of topfile is
             selectrw    : out std_logic; -- read/write
             en          : out std_logic; -- enable
             lcd_on      : out std_logic; -- lcd power ON
-            db          : out std_logic_vector(7 DOWNTO 0)
+            db          : out std_logic_vector(7 DOWNTO 0);
+            
+            -- Game logic specific I/O
+            win_lose_na  : in integer;
+            point        : in integer;
+            die_roll_1   : in integer;
+            die_roll_2   : in integer;
+            roll         : in integer -- die_roll_1 + die_roll_2
         );
     end component;
 		
@@ -64,6 +72,8 @@ architecture struct of topfile is
 	signal outpoint : integer;
 	signal newRoll : std_logic;
 	signal Win_Lose : integer;
+    signal reset_sig : std_logic;
+	signal orr : std_logic;
 
 begin
 	
@@ -77,15 +87,15 @@ begin
 	
 	
 	logic1: testLogic port map(
-							CLOCK_50,
-							KEY(0),
-							DIE_1,
-							DIE_2,
-							newRoll,
-							reset_sig,
-							outPoint,
-							outRoll,
-							Win_Lose);
+							Clock => CLOCK_50,
+							n_RST => KEY(0),
+							roll1 => DIE_1,
+							roll2 => DIE_2,
+							newRoll => newRoll,
+							resetSig => reset_sig,
+							pointOUT => outPoint,
+							rollOUT => outRoll,
+							WinLoseNA => Win_Lose);
                             
     isnt_lcd_driver : lcd_driver port map(
                             clk => CLOCK_50,

@@ -8,7 +8,7 @@ entity roll_dice is
         n_RST      : in std_logic;
         DIE_1      : out integer;
         DIE_2      : out integer;
-        NEW_ROLL   : out std_logic -- goes high for one clock cycle when rolls are decided
+        NEW_ROLL   : out std_logic -- goes high for two clock cycles when rolls are decided
 	);
 end entity roll_dice;
 
