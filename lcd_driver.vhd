@@ -43,7 +43,8 @@ entity lcd_driver is
         point        : in integer;
         die_roll_1   : in integer;
         die_roll_2   : in integer;
-        roll         : in integer -- die_roll_1 + die_roll_2
+        roll         : in integer; -- die_roll_1 + die_roll_2
+		  newRoll		: in std_logic
 	);
 end lcd_driver;
 
@@ -124,7 +125,10 @@ architecture rtl of lcd_driver is
 	signal state, next_state : state_t;
 	signal digit, next_digit : integer range 0 TO 9;
 	signal cnt, next_cnt : integer range 0 TO timer_limit;
-    signal rw : std_logic;
+   signal rw : std_logic;
+	signal regRoll1: integer;
+	signal regRoll2: integer;
+	signal regRoll : integer;
 BEGIN
 -- clock divider
 	clk_div : PROCESS (clk)
@@ -183,7 +187,7 @@ BEGIN
 	--
 	-- state machine driving the LCD
 	--
-	machine: process(state, digit, lcdon, roll)
+	machine: process(state, digit, lcdon, point, regRoll1, regRoll2, regRoll)
 	begin
 		-- default
 		next_state  <= state;
@@ -324,6 +328,8 @@ BEGIN
                         db <= num_one;
                     when 12 =>
                         db <= num_one;
+						  when 0 =>
+								db <= n_letter;
                     when others =>
                         db <= num_zero;
                 end case;
@@ -354,7 +360,7 @@ BEGIN
                     when 12 =>
                         db <= num_two;
                     when others =>
-                        -- do nothing
+                        db <= a_letter;
                 end case;
 				next_state <= sa2;
                 
@@ -378,7 +384,7 @@ BEGIN
 				next_state <= wd20;
             when wd20 =>
 				rs <= '1'; rw <= '0';
-                case die_roll_1 is
+                case regRoll1 is
                     when 1 =>
                         db <= num_one;
                     when 2 =>
@@ -413,7 +419,7 @@ BEGIN
 				next_state <= wd25;
             when wd25 =>
 				rs <= '1'; rw <= '0';
-				case die_roll_2 is
+				case regRoll2 is
                     when 1 =>
                         db <= num_one;
                     when 2 =>
@@ -448,7 +454,7 @@ BEGIN
 				next_state <= wd30;
             when wd30 =>
 				rs <= '1'; rw <= '0';
-				case roll is
+				case regRoll is
                     when 10 =>
                         db <= num_one;
                     when 11 =>
@@ -461,7 +467,7 @@ BEGIN
 				next_state <= wd31;
             when wd31 =>
 				rs <= '1'; rw <= '0';
-				case roll is
+				case regRoll is
                     when 0 =>
                         db <= num_zero; -- hasn't rolled yet
                     when 2 =>
@@ -487,7 +493,7 @@ BEGIN
                     when 12 =>
                         db <= num_two;
                     when others =>
-                        -- do nothing
+                        db <= num_zero;
                 end case;
 				next_state <= rh;
             when rh =>
@@ -496,6 +502,19 @@ BEGIN
                 next_state <= wd1;
 		end case;
 	end process machine;
+	
+	flip:process(newRoll,rst)
+	begin
+		if(rst = '0') then
+			regRoll1 <= 0;
+			regRoll2 <= 0;
+			regRoll <= 0;
+	   elsif (newRoll = '1' and newRoll'event) then
+			regRoll1 <= die_roll_1;
+			regRoll2 <= die_roll_2;
+			regRoll <= roll;
+	   end if;
+	end process flip;
 	
 	-- simple assignments
 	lcd_on <= lcdon;
